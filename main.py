@@ -10,11 +10,6 @@ SERIE_PATH = os.path.join(PATH, 'xrmb-tv.txt')
 fenetre = Tk()
 fenetre.geometry("750x250")
 
-result_window = Tk()
-result_window.geometry("750x250")
-
-result_list = Listbox(result_window, width=100, height=100)
-
 check_movie = tkinter.IntVar()
 check_serie = tkinter.IntVar()
 
@@ -55,15 +50,20 @@ def get_value():
     return value
 
 def search_movie():
-    movie = search_result
+    movie = entry.get()
     # quality = input("Entrez la qualité du film (appuyez sur Entrée pour ignorer) : ")
     movie_name = replace_dots([movie])
+
+    # Créer une nouvelle fenêtre pour afficher les résultats
+    result_window = Tk()
+    result_window.geometry("750x250")
+    result_list = Listbox(result_window, width=750, height=250)
 
     with open(MOVIE_PATH) as f:
         for line in f:
             for name in movie_name:
                 if name in line: # and (quality == "" or quality in line):
-                    print(line)
+                    result_list.insert(END, line.strip())
 
     # Create listbox with results
     result_list.insert(END, line)
@@ -71,7 +71,7 @@ def search_movie():
 
     result_window.mainloop()
 def search_serie():
-    serie_name = search_result
+    serie_name = entry.get()
     season = input("Entrez la saison de la serie (appuyez sur Entrée pour ignorer) : ")
     episode = input("Entrez l'épisode de la serie (appuyez sur Entrée pour ignorer) : ")
     quality = input("Entrez la qualité du film (appuyez sur Entrée pour ignorer) : ")
@@ -86,10 +86,9 @@ def search_serie():
                 if name in line and (quality == "" or quality in line) and (season == "" or season in line) and (episode == "" or episode in line):
                     print(line)
 
-def search(movie_value, serie_value):
-    # print("1. Film")
-    # print("2. Serie")
-    # choice = input("Entrez votre choix : ")
+def search():
+    movie_value = check_movie.get()
+    serie_value = check_serie.get()
 
     if movie_value == 1:
         search_movie()
@@ -103,20 +102,19 @@ while True:
     entry = Entry(fenetre, textvariable=value, width=50)
     entry.pack()
 
-    search_result = entry.get()
+    # search_result = entry.get()
+    # print(search_result)
 
     # Button movie and serie selection
-    button_movie = Checkbutton(fenetre, text="Movie")
+    button_movie = Checkbutton(fenetre, text="Movie", variable=check_movie)
     button_movie.pack()
 
     movie_value = check_movie.get()
-    print(movie_value)
 
-    button_serie = Checkbutton(fenetre, text="Serie")
+    button_serie = Checkbutton(fenetre, text="Serie", variable=check_serie)
     button_serie.pack()
 
     serie_value = check_serie.get()
-    print(serie_value)
 
     # Quality selection
     button_4k = Checkbutton(fenetre, text="4K")
@@ -131,8 +129,8 @@ while True:
     quality_720 = check_quality_720.get()
 
     # Button search
-    search_button = Button(fenetre, text="Search", command=search(movie_value, serie_value))
-    search_button.pack(side=tkinter.BOTTOM, padx=10)
+    search_button = Button(fenetre, text="Search", command=search)
+    search_button.pack(side=tkinter.BOTTOM)
 
     fenetre.mainloop()
 # search()
