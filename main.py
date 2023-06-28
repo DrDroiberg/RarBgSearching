@@ -1,9 +1,21 @@
 import os
 import msvcrt
+import tkinter
+from tkinter import *
 
 PATH = os.path.dirname(os.path.abspath(__file__))
 MOVIE_PATH = os.path.join(PATH, 'xrmb-movies.txt')
 SERIE_PATH = os.path.join(PATH, 'xrmb-tv.txt')
+
+fenetre = Tk()
+fenetre.geometry("750x250")
+
+check_movie = tkinter.IntVar()
+check_serie = tkinter.IntVar()
+
+check_quality_4k = tkinter.IntVar()
+check_quality_1080 = tkinter.IntVar()
+check_quality_720 = tkinter.IntVar()
 
 def wait_for_escape():
     print("Appuyez sur la touche Echap pour quitter...")
@@ -33,8 +45,12 @@ def formatting_episode(episode):
 
     return episode
 
+def get_value():
+    value = entry.get()
+    return value
+
 def search_movie():
-    movie = input("Entrez le nom du film : ")
+    movie = search_result
     quality = input("Entrez la qualité du film (appuyez sur Entrée pour ignorer) : ")
     movie_name = replace_dots([movie])
 
@@ -45,7 +61,7 @@ def search_movie():
                     print(line)
 
 def search_serie():
-    serie_name = input("Entrez le nom de la serie : ")
+    serie_name = search_result
     season = input("Entrez la saison de la serie (appuyez sur Entrée pour ignorer) : ")
     episode = input("Entrez l'épisode de la serie (appuyez sur Entrée pour ignorer) : ")
     quality = input("Entrez la qualité du film (appuyez sur Entrée pour ignorer) : ")
@@ -60,16 +76,52 @@ def search_serie():
                 if name in line and (quality == "" or quality in line) and (season == "" or season in line) and (episode == "" or episode in line):
                     print(line)
 
-def search():
-    print("1. Film")
-    print("2. Serie")
-    choice = input("Entrez votre choix : ")
+def search(movie_value, serie_value):
+    # print("1. Film")
+    # print("2. Serie")
+    # choice = input("Entrez votre choix : ")
 
-    if choice == "1":
+    if movie_value == 1:
         search_movie()
-    elif choice == "2":
+    if serie_value == 1:
         search_serie()
 
-if __name__ == "__main__":
-    search()
-    wait_for_escape()
+
+# Search bar
+value = StringVar()
+value.set(" ")
+entry = Entry(fenetre, textvariable=value, width=50)
+entry.pack()
+
+search_result = entry.get()
+
+# Button movie and serie selection
+button_movie = Checkbutton(fenetre, text="Movie")
+button_movie.pack(padx=50, pady=10)
+
+movie_value = check_movie.get()
+
+button_serie = Checkbutton(fenetre, text="Serie")
+button_serie.pack(padx=50, pady=15)
+
+serie_value = check_serie.get()
+
+# Quality selection
+button_4k = Checkbutton(fenetre, text="4K")
+button_4k.pack(padx=10, pady=15)
+button_1080 = Checkbutton(fenetre, text="1080p")
+button_1080.pack(padx=10, pady=10)
+button_720 = Checkbutton(fenetre, text="720p")
+button_720.pack(padx=10, pady=5)
+
+quality_4k = check_quality_4k.get()
+quality_1080 = check_quality_1080.get()
+quality_720 = check_quality_720.get()
+
+# Button search
+button = Button(fenetre, text="Search", command=search)
+button.pack()
+
+fenetre.mainloop()
+# search()
+# wait_for_escape()
