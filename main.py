@@ -45,14 +45,32 @@ def formatting_episode(episode):
 
     return episode
 
-def get_value():
-    value = entry.get()
-    return value
+def quality():
+    quality = [check_quality_4k.get(),
+                     check_quality_1080.get(),
+                     check_quality_720.get()]
+    if(quality[0] == 1):
+        quality[0] = "2160p"
+    else:
+        quality[0] = ""
+    if(quality[1] == 1):
+        quality[1] = "1080p"
+    else:
+        quality[1] = ""
+    if(quality[2] == 1):
+        quality[2] = "720p"
+    else:
+        quality[2] = ""
+
+    return quality
+
+def title_formating(movie):
+    return movie
 
 def search_movie():
     movie = entry.get()
-    # quality = input("Entrez la qualité du film (appuyez sur Entrée pour ignorer) : ")
     movie_name = replace_dots([movie])
+    movie_quality = quality()
 
     # Créer une nouvelle fenêtre pour afficher les résultats
     result_window = Tk()
@@ -62,8 +80,10 @@ def search_movie():
     with open(MOVIE_PATH) as f:
         for line in f:
             for name in movie_name:
-                if name in line: # and (quality == "" or quality in line):
-                    result_list.insert(END, line.strip())
+                if name in line and (movie_quality[0] == "" or movie_quality[0] in line) \
+                        and (movie_quality[1] == "" or movie_quality[1] in line) \
+                        and (movie_quality[2] == "" or movie_quality[2] in line):
+                        result_list.insert(END, line.strip())
 
     # Create listbox with results
     result_list.insert(END, line)
@@ -72,18 +92,16 @@ def search_movie():
     result_window.mainloop()
 def search_serie():
     serie_name = entry.get()
-    season = input("Entrez la saison de la serie (appuyez sur Entrée pour ignorer) : ")
-    episode = input("Entrez l'épisode de la serie (appuyez sur Entrée pour ignorer) : ")
-    quality = input("Entrez la qualité du film (appuyez sur Entrée pour ignorer) : ")
+    serie_quality = quality()
 
-    season = formatting_season(season)
     serie_name = replace_dots([serie_name])
-    episode = formatting_episode(episode)
 
     with open(SERIE_PATH) as f:
         for line in f:
             for name in serie_name:
-                if name in line and (quality == "" or quality in line) and (season == "" or season in line) and (episode == "" or episode in line):
+                if name in line and (serie_quality[0] == "" or serie_quality[0] in line) and \
+                        (serie_quality[1] == "" or serie_quality[1] in line) \
+                        and (serie_quality[2] == "" or serie_quality[2] in line):
                     print(line)
 
 def search():
@@ -98,35 +116,24 @@ def search():
 while True:
     # Search bar
     value = StringVar()
-    value.set(" ")
+    value.set("")
     entry = Entry(fenetre, textvariable=value, width=50)
     entry.pack()
-
-    # search_result = entry.get()
-    # print(search_result)
 
     # Button movie and serie selection
     button_movie = Checkbutton(fenetre, text="Movie", variable=check_movie)
     button_movie.pack()
 
-    movie_value = check_movie.get()
-
     button_serie = Checkbutton(fenetre, text="Serie", variable=check_serie)
     button_serie.pack()
 
-    serie_value = check_serie.get()
-
     # Quality selection
-    button_4k = Checkbutton(fenetre, text="4K")
+    button_4k = Checkbutton(fenetre, text="4K", variable=check_quality_4k)
     button_4k.pack()
-    button_1080 = Checkbutton(fenetre, text="1080p")
+    button_1080 = Checkbutton(fenetre, text="1080p", variable=check_quality_1080)
     button_1080.pack()
-    button_720 = Checkbutton(fenetre, text="720p")
+    button_720 = Checkbutton(fenetre, text="720p", variable=check_quality_720)
     button_720.pack()
-
-    quality_4k = check_quality_4k.get()
-    quality_1080 = check_quality_1080.get()
-    quality_720 = check_quality_720.get()
 
     # Button search
     search_button = Button(fenetre, text="Search", command=search)
