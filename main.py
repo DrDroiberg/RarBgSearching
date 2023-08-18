@@ -108,6 +108,11 @@ def search_serie():
                         result_list.insert(END, line.strip())
                         print(line)
 
+    result_list.insert(END, line)
+    result_list.pack()
+
+    result_window.mainloop()
+
 def search():
     movie_value = check_movie.get()
     serie_value = check_serie.get()
