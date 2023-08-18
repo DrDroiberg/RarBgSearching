@@ -91,10 +91,13 @@ def search_movie():
 
     result_window.mainloop()
 def search_serie():
-    serie_name = entry.get()
+    serie = entry.get()
     serie_quality = quality()
 
-    serie_name = replace_dots([serie_name])
+    serie_name = replace_dots([serie])
+    result_window = Tk()
+    result_window.geometry("750x250")
+    result_list = Listbox(result_window, width=750, height=250)
 
     with open(SERIE_PATH) as f:
         for line in f:
@@ -102,7 +105,8 @@ def search_serie():
                 if name in line and (serie_quality[0] == "" or serie_quality[0] in line) and \
                         (serie_quality[1] == "" or serie_quality[1] in line) \
                         and (serie_quality[2] == "" or serie_quality[2] in line):
-                    print(line)
+                        result_list.insert(END, line.strip())
+                        print(line)
 
 def search():
     movie_value = check_movie.get()
