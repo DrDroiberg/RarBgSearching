@@ -106,7 +106,7 @@ def search_serie():
                         (serie_quality[1] == "" or serie_quality[1] in line) \
                         and (serie_quality[2] == "" or serie_quality[2] in line):
                         result_list.insert(END, line.strip())
-                        print(line)
+
 
     result_list.insert(END, line)
     result_list.pack()
